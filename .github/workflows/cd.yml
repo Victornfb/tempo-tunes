@@ -23,4 +23,11 @@ jobs:
           script: |
             docker pull victornfb/tempo-tunes:latest
             docker rm -f tempo-tunes || true
-            docker run -d -p 80:4000 --name tempo-tunes victornfb/tempo-tunes:latest
+            docker run -d -p 4000:4000 --name tempo-tunes \
+            -e OPEN_WEATHER_BASE_URL=${{ secrets.OPEN_WEATHER_BASE_URL }} \
+            -e OPEN_WEATHER_API_KEY=${{ secrets.OPEN_WEATHER_API_KEY }} \
+            -e SPOTIFY_BASE_URL=${{ secrets.SPOTIFY_BASE_URL }} \
+            -e SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} \
+            -e SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} \
+            -e SPOTIFY_ACCOUNTS_BASE_URL=${{ secrets.SPOTIFY_ACCOUNTS_BASE_URL }} \
+            victornfb/tempo-tunes:latest

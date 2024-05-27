@@ -3,6 +3,7 @@ import axios, { AxiosInstance } from "axios";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
+import { RedisService } from "@src/helpers/redis";
 import { Category } from "./dto/category.dto";
 import { Playlist } from "./dto/playlist.dto";
 import { Track } from "./dto/track.dto";
@@ -11,10 +12,16 @@ import { PlaylistNotFoundException } from "./exceptions/playlist-not-found.excep
 
 @Injectable()
 export class SpotifyService {
+  private ACCESS_TOKEN_CACHE_TTL = 3600; // 1 hour
+  private ACCESS_TOKEN_KEY = "spotify_access_token";
+
   private instance: AxiosInstance;
   private accessToken: string;
 
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly redis: RedisService
+  ) {}
 
   async getInstance(): Promise<AxiosInstance> {
     if (!this.accessToken) {
@@ -35,6 +42,10 @@ export class SpotifyService {
 
   async getToken(): Promise<string> {
     try {
+      let token = await this.redis.get(this.ACCESS_TOKEN_KEY);
+
+      if (token) return token;
+
       const clientId = this.configService.get<string>("SPOTIFY_CLIENT_ID");
       const clientSecret = this.configService.get<string>(
         "SPOTIFY_CLIENT_SECRET"
@@ -55,7 +66,15 @@ export class SpotifyService {
         }
       );
 
-      return response?.data?.access_token;
+      token = response?.data?.access_token;
+
+      await this.redis.set(
+        this.ACCESS_TOKEN_KEY,
+        token,
+        this.ACCESS_TOKEN_CACHE_TTL
+      );
+
+      return token;
     } catch (error) {
       Logger.error(error);
     }

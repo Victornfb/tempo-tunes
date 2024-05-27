@@ -1,9 +1,12 @@
-import { Module } from "@nestjs/common";
 import { WinstonModule } from "nest-winston";
 import { format, transports } from "winston";
 
+import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+
 import { AppController } from "./app.controller";
+import { OpenWeatherModule } from "./helpers/open-weather";
+import { RedisModule } from "./helpers/redis";
 import { PlaylistModule } from "./modules/playlist/playlist.module";
 import { SpotifyModule } from "./modules/spotify/spotify.module";
 
@@ -31,7 +34,9 @@ import { SpotifyModule } from "./modules/spotify/spotify.module";
     }),
 
     PlaylistModule,
+    OpenWeatherModule,
     SpotifyModule,
+    RedisModule,
   ],
   controllers: [AppController],
 })

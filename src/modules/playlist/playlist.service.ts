@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { OpenWeatherHelper } from "@src/helpers/open-weather.helper";
 
+import { OpenWeatherService } from "@src/helpers/open-weather";
 import { SpotifyService } from "../spotify/spotify.service";
 import { PlaylistResponseDTO } from "./dto/playlist-response.dto";
 import { CityNotFoundException } from "./exceptions/city-not-found.exception";
@@ -8,16 +8,21 @@ import { WeatherNotFoundException } from "./exceptions/weather-not-found.excepti
 
 @Injectable()
 export class PlaylistService {
-  constructor(private readonly spotifyService: SpotifyService) {}
+  constructor(
+    private readonly openWeatherService: OpenWeatherService,
+    private readonly spotifyService: SpotifyService
+  ) {}
 
   async findByCity(city: string): Promise<object> {
-    const geolocation = await OpenWeatherHelper.getGeolocationByCity(city);
+    const geolocation = await this.openWeatherService.getGeolocationByCity(
+      city
+    );
 
     if (!geolocation?.lat && !geolocation?.lon) {
       throw new CityNotFoundException();
     }
 
-    const weather = await OpenWeatherHelper.getWeatherByCoordinates(
+    const weather = await this.openWeatherService.getWeatherByCoordinates(
       geolocation.lat,
       geolocation.lon
     );

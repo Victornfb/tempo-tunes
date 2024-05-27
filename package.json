@@ -2,7 +2,7 @@
   "name": "tempo-tunes",
   "version": "1.0.0",
   "description": "The Perfect Playlist for Every Temperature!",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "build": "nest build",
     "start": "nest start",

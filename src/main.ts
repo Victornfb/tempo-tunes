@@ -17,6 +17,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ExceptionsFilter());
 
+  EntireSwaggerConfig.initialize(app);
+
   app.use(helmet());
 
   app.enableCors({
@@ -31,8 +33,6 @@ async function bootstrap() {
       whitelist: true,
     })
   );
-
-  EntireSwaggerConfig.initialize(app);
 
   await app.listen(4000, async () =>
     Logger.log(`Application started at ${await app.getUrl()}`)

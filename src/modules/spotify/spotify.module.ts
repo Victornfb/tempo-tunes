@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-
 import { RedisService } from "@src/helpers/redis";
+
 import { SpotifyService } from "./spotify.service";
 
 @Module({

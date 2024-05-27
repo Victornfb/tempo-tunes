@@ -2,8 +2,8 @@ import axios, { AxiosInstance } from "axios";
 
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-
 import { RedisService } from "@src/helpers/redis";
+
 import { Category } from "./dto/category.dto";
 import { Playlist } from "./dto/playlist.dto";
 import { Track } from "./dto/track.dto";
@@ -12,7 +12,9 @@ import { PlaylistNotFoundException } from "./exceptions/playlist-not-found.excep
 
 @Injectable()
 export class SpotifyService {
-  private ACCESS_TOKEN_CACHE_TTL = 3600; // 1 hour
+  private GENERAL_CACHE_TTL = 60 * 60; // 1 hour
+
+  private ACCESS_TOKEN_CACHE_TTL = 60 * 60; // 1 hour
   private ACCESS_TOKEN_KEY = "spotify_access_token";
 
   private instance: AxiosInstance;
@@ -34,6 +36,16 @@ export class SpotifyService {
         headers: {
           Authorization: `Bearer ${this.accessToken}`,
         },
+      });
+
+      this.instance.interceptors.response.use(undefined, async (error) => {
+        if (error?.response?.status === 401) {
+          this.accessToken = await this.getToken();
+          error.config.headers.Authorization = `Bearer ${this.accessToken}`;
+          return this.instance.request(error.config);
+        }
+
+        return Promise.reject(error);
       });
     }
 
@@ -82,6 +94,12 @@ export class SpotifyService {
 
   async getCategories(page = 1, limit = 50): Promise<Category[]> {
     try {
+      const cacheKey = `categories:${page}:${limit}`;
+
+      const cacheResult = await this.redis.get(cacheKey);
+
+      if (cacheResult) return JSON.parse(cacheResult);
+
       const spotifyApi = await this.getInstance();
 
       const response = await spotifyApi.get(`/browse/categories`, {
@@ -92,13 +110,16 @@ export class SpotifyService {
         },
       });
 
-      return response?.data?.categories?.items as Category[];
-    } catch (error: any) {
-      if (error?.response?.status === 401) {
-        this.accessToken = await this.getToken();
-        return this.getCategories(page, limit);
-      }
+      const categories = response?.data?.categories?.items as Category[];
 
+      await this.redis.set(
+        cacheKey,
+        JSON.stringify(categories),
+        this.GENERAL_CACHE_TTL
+      );
+
+      return categories;
+    } catch (error: any) {
       Logger.error(error);
     }
   }
@@ -109,6 +130,12 @@ export class SpotifyService {
     limit = 10
   ): Promise<Playlist[]> {
     try {
+      const cacheKey = `playlists:${categoryId}:${page}:${limit}`;
+
+      const cacheResult = await this.redis.get(cacheKey);
+
+      if (cacheResult) return JSON.parse(cacheResult);
+
       const spotifyApi = await this.getInstance();
 
       const response = await spotifyApi.get(
@@ -121,13 +148,16 @@ export class SpotifyService {
         }
       );
 
-      return response?.data?.playlists?.items as Playlist[];
-    } catch (error: any) {
-      if (error?.response?.status === 401) {
-        this.accessToken = await this.getToken();
-        return this.getPlaylistsByCategory(categoryId, page, limit);
-      }
+      const playlists = response?.data?.playlists?.items as Playlist[];
 
+      await this.redis.set(
+        cacheKey,
+        JSON.stringify(playlists),
+        this.GENERAL_CACHE_TTL
+      );
+
+      return playlists;
+    } catch (error: any) {
       Logger.error(error);
     }
   }
@@ -138,6 +168,12 @@ export class SpotifyService {
     limit = 10
   ): Promise<Array<{ name: string; artist: string }>> {
     try {
+      const cacheKey = `playlistItems:${playlistId}:${page}:${limit}`;
+
+      const cacheResult = await this.redis.get(cacheKey);
+
+      if (cacheResult) return JSON.parse(cacheResult);
+
       const spotifyApi = await this.getInstance();
 
       const response = await spotifyApi.get(`/playlists/${playlistId}/tracks`, {
@@ -155,13 +191,14 @@ export class SpotifyService {
         artist: item?.track?.artists?.[0]?.name,
       }));
 
+      await this.redis.set(
+        cacheKey,
+        JSON.stringify(updatedItems),
+        this.GENERAL_CACHE_TTL
+      );
+
       return updatedItems;
     } catch (error: any) {
-      if (error?.response?.status === 401) {
-        this.accessToken = await this.getToken();
-        return this.getPlaylistItems(playlistId, page, limit);
-      }
-
       Logger.error(error);
     }
   }

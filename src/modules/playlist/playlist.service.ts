@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-
 import { OpenWeatherService } from "@src/helpers/open-weather";
+
 import { SpotifyService } from "../spotify/spotify.service";
 import { PlaylistResponseDTO } from "./dto/playlist-response.dto";
 import { CityNotFoundException } from "./exceptions/city-not-found.exception";

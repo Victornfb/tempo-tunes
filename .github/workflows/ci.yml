@@ -1,4 +1,4 @@
-name: Deploy
+name: CI Pipeline
 
 on:
   push:
@@ -13,14 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to DockerHub
+      - name: Login to dockerHub
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-      - name: Build Docker image
+      - name: Build docker image
         run: docker build -t victornfb/tempo-tunes:latest .
 
-      - name: Push Docker image
+      - name: Push docker image
         run: docker push victornfb/tempo-tunes:latest

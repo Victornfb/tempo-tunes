@@ -74,7 +74,12 @@ export class SpotifyService {
       });
 
       return response?.data?.categories?.items as Category[];
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        this.accessToken = await this.getToken();
+        return this.getCategories(page, limit);
+      }
+
       Logger.error(error);
     }
   }
@@ -98,7 +103,12 @@ export class SpotifyService {
       );
 
       return response?.data?.playlists?.items as Playlist[];
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        this.accessToken = await this.getToken();
+        return this.getPlaylistsByCategory(categoryId, page, limit);
+      }
+
       Logger.error(error);
     }
   }
@@ -127,7 +137,12 @@ export class SpotifyService {
       }));
 
       return updatedItems;
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        this.accessToken = await this.getToken();
+        return this.getPlaylistItems(playlistId, page, limit);
+      }
+
       Logger.error(error);
     }
   }

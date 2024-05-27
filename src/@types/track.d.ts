@@ -1,4 +1,4 @@
-import { Artist } from "./artist.dto";
+import { Artist } from "./artist";
 
 export interface Track {
   added_at: string;

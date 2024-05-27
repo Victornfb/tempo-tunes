@@ -4,9 +4,9 @@ import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { RedisService } from "@src/helpers/redis";
 
-import { Category } from "./dto/category.dto";
-import { Playlist } from "./dto/playlist.dto";
-import { Track } from "./dto/track.dto";
+import { Category } from "@src/@types/category";
+import { Playlist } from "@src/@types/playlist";
+import { Track } from "@src/@types/track";
 import { CategoryNotFoundException } from "./exceptions/category-not-found.exception";
 import { PlaylistNotFoundException } from "./exceptions/playlist-not-found.exception";
 

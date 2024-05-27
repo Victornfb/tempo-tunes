@@ -20,7 +20,7 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build Docker image
-        run: docker build -t tempo-tunes .
+        run: docker build -t victornfb/tempo-tunes:latest .
 
       - name: Push Docker image
         run: docker push victornfb/tempo-tunes:latest

@@ -30,4 +30,7 @@ jobs:
             -e SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }} \
             -e SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }} \
             -e SPOTIFY_ACCOUNTS_BASE_URL=${{ secrets.SPOTIFY_ACCOUNTS_BASE_URL }} \
+            -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
+            -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
+            -e REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} \
             victornfb/tempo-tunes:latest

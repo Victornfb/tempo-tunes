@@ -8,23 +8,41 @@ Você pode acessar a documentação do serviço [aqui](http://ec2-18-228-196-248
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
 
-- [Node](https://nodejs.org/en/)
-- [TypeScript](https://www.typescriptlang.org/)
+- [Node](https://nodejs.org/en/) e [TypeScript](https://www.typescriptlang.org/)
+
+  Escolhido por seu alto poder de processamento quando aplicado corretamente. Em conjunto com o TypeScript, permite identificar previamente potenciais problemas de tipagem, tornando a aplicação mais robusta.
+  
 - [NestJS](https://nestjs.com/)
+
+  Utilizado por sua facilidade de implementação rápida de soluções, oferecendo diversas funcionalidades como `transporters` para microserviços, `decorators` e injeção de dependências.
+
 - [Swagger](https://swagger.io/)
+
+  Ferramenta utilizada para documentação de APIs, que utiliza o padrão [OpenAPI](https://www.openapis.org/) 3.0, também utilizado para `collections` no Postman, por exemplo.
+
 - [Docker](https://www.docker.com/)
+
+  Utilizado para containerizar a aplicação, mitigando problemas relacionados ao ambiente de execução e mantendo um ambiente estável e homogêneo.
+
 - [Redis](https://redis.io/)
-- [GitHub Actions](https://docs.github.com/pt/actions)
-- [AWS](https://aws.amazon.com/pt/)
 
-As tecnologias acima foram escolhidas cada uma com seu propósito:
+  Escolhido para fazer o cache da aplicação, economizando consultas a APIs de terceiros, minimizando o tempo de resposta e os custos.
 
-- **Node e TypeScript**: Escolhido por seu alto poder de processamento quando aplicado corretamente. Em conjunto com o TypeScript, permite identificar previamente potenciais problemas de tipagem, tornando a aplicação mais robusta.
-- **NestJS**: Utilizado por sua facilidade de implementação rápida de soluções, oferecendo diversas funcionalidades como `transporters` para microserviços, `decorators` e injeção de dependências.
-- **Swagger**: Ferramenta utilizada para documentação de APIs, que utiliza o padrão OpenAPI 3.0, também utilizado para `collections` no Postman, por exemplo.
-- **Docker**: Utilizado para containerizar a aplicação, mitigando problemas relacionados ao ambiente de execução e mantendo um ambiente estável e homogêneo.
-- **Redis**: Escolhido para fazer o cache da aplicação, economizando consultas a APIs de terceiros, minimizando o tempo de resposta e os custos.
-- **GitHub Actions e AWS**: Utilizados como plataformas para gerenciar o processo de CI/CD, descrito mais detalhadamente na seção abaixo.
+- [GitHub Actions](https://docs.github.com/pt/actions) e [AWS](https://aws.amazon.com/pt/)
+
+  Utilizados como plataformas para gerenciar o processo de CI/CD, descrito mais detalhadamente nas seções abaixo.
+
+## 🧩 Serviços externos
+
+Foram utilizados os seguintes serviços para a funcionalidade do projeto:
+
+- [OpenWeather API](https://openweathermap.org/api)
+
+  Utilizada para fazer a consulta geográfica utilizando o termo buscado pelo usuário. O serviço foi escolhido por oferecer diversas funcionalidades geográficas e climáticas de forma gratuita, além de ter alta disponibilidade e confiabilidade.
+
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api)
+
+  Utilizada para fazer a busca de categorias, playlists e músicas de acordo com o gênero. O serviço foi selecionado devido à vasta biblioteca de títulos. Além disso, a API é gratuita para ser utilizada e possui, assim como a anterior, alta disponibilidade e confiabilidade.
 
 ## 🚀 Processo de [CI/CD](https://unity.com/pt/solutions/what-is-ci-cd)
 

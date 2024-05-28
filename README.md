@@ -17,6 +17,15 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [GitHub Actions](https://docs.github.com/pt/actions)
 - [AWS](https://aws.amazon.com/pt/)
 
+As tecnologias acima foram escolhidas cada uma com seu propósito:
+
+- **Node e TypeScript**: Escolhido por seu alto poder de processamento quando aplicado corretamente. Em conjunto com o TypeScript, permite identificar previamente potenciais problemas de tipagem, tornando a aplicação mais robusta.
+- **NestJS**: Utilizado por sua facilidade de implementação rápida de soluções, oferecendo diversas funcionalidades como `transporters` para microserviços, `decorators` e injeção de dependências.
+- **Swagger**: Ferramenta utilizada para documentação de APIs, que utiliza o padrão OpenAPI 3.0, também utilizado para `collections` no Postman, por exemplo.
+- **Docker**: Utilizado para containerizar a aplicação, mitigando problemas relacionados ao ambiente de execução e mantendo um ambiente estável e homogêneo.
+- **Redis**: Escolhido para fazer o cache da aplicação, economizando consultas a APIs de terceiros, minimizando o tempo de resposta e os custos.
+- **GitHub Actions e AWS**: Utilizados como plataformas para gerenciar o processo de CI/CD, descrito mais detalhadamente na seção abaixo.
+
 ## 🚀 Processo de [CI/CD](https://unity.com/pt/solutions/what-is-ci-cd)
 
 O processo de deployment do projeto consiste nos seguintes passos:
